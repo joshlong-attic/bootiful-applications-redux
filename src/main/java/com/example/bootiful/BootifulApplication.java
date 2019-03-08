@@ -9,6 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
@@ -34,10 +36,13 @@ public class BootifulApplication {
 	}
 
 	@Bean
-	RouterFunction<ServerResponse> routes(CustomerRepository cc) {
+	RouterFunction<ServerResponse> routes(CustomerRepository cc, Timer timer) {
 		return
 			route(GET("/customers"), r -> ok().body(cc.findAll(), Customer.class))
-				.andRoute(GET("/"), r -> ok().render("ui", Map.of("customers", cc.findAll())));
+				.andRoute(GET("/"), r -> ok().render("ui", Map.of("customers", cc.findAll())))
+				.andRoute(GET("/sse"), r -> ok()
+					.contentType(MediaType.TEXT_EVENT_STREAM)
+					.body(timer.greet(), String.class));
 	}
 }
 
@@ -45,10 +50,10 @@ public class BootifulApplication {
 class WebsocketConfig {
 
 	@Bean
-	SimpleUrlHandlerMapping simpleUrlHandlerMapping() {
+	SimpleUrlHandlerMapping simpleUrlHandlerMapping(WebSocketHandler wsh) {
 		return new SimpleUrlHandlerMapping() {
 			{
-				setUrlMap(Map.of("/ws/time", wsh()));
+				setUrlMap(Map.of("/ws/time", wsh));
 				setOrder(10);
 			}
 		};
@@ -61,17 +66,22 @@ class WebsocketConfig {
 
 
 	@Bean
-	WebSocketHandler wsh() {
-
-		var data = Flux
-			.fromStream(Stream.generate(() -> "Hello @ " + Instant.now().toString()))
-			.delayElements(Duration.ofSeconds(1));
-
-		return session -> session.send(data.share().map(session::textMessage));
+	WebSocketHandler wsh(Timer timer) {
+		return session -> session.send(timer.greet().share().map(session::textMessage));
 	}
 }
 
 interface CustomerRepository extends ReactiveCrudRepository<Customer, String> {
+}
+
+@Component
+class Timer {
+
+	Flux<String> greet() {
+		return Flux
+			.fromStream(Stream.generate(() -> Instant.now().toString()))
+			.delayElements(Duration.ofSeconds(1));
+	}
 }
 
 @Data
