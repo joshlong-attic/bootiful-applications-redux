@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <title>Websockets Client
+    </title>
+
+</head>
+<body>
+
+<div id="messages"></div>
+<script>
+    window.addEventListener('load', function (e) {
+        var ws = new WebSocket('ws://localhost:8080/ws/time');
+        var messages = document.getElementById('messages');
+        ws.addEventListener('message', function (message) {
+            var newChild = document.createElement('div');
+            newChild.innerText = message.data;
+            messages.appendChild(newChild);
+        });
+    });
+</script>
+
+</body>
+</html>
