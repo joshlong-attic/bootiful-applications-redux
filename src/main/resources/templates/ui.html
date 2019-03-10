@@ -1,20 +1,21 @@
 <!DOCTYPE html>
-<head>
+<head xmlns:th="http://www.w3.org/1999/xhtml">
     <title>
-        Welcome ${user.name}!
+        User Interface
     </title>
 
 </head>
 <body>
 
-<h1> Thymeleaf Model Customers </h1>
-<div th:each = "customer : ${customers}">
+<h1>Welcome <span th:text="${user}">Josh</span>!</h1>
+
+<h2> Thymeleaf Model Customers </h2>
+<div th:each="customer : ${customers}">
     <span th:text="${customer.id}">ID</span>
     <span th:text="${customer.name}">Name</span>
 </div>
 
-<h1> Websocket Messages
-</h1>
+<h2> Websocket Messages </h2>
 <div id="messages"></div>
 <script>
     window.addEventListener('load', function (e) {
