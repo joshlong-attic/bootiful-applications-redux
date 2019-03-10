@@ -40,7 +40,7 @@ public class BootifulApplication {
 	RouterFunction<ServerResponse> routes(CustomerRepository cc, Timer timer) {
 		return
 			route(GET("/customers"), r -> ok().body(cc.findAll(), Customer.class))
-				.andRoute(GET("/"), r -> ok().render("ui", Map.of("customers", cc.findAll())))
+				.andRoute(GET("/"), r -> ok().render("ui", Map.of("customers", cc.findAll(), "user", r.principal())))
 				.andRoute(GET("/sse"), r -> ok()
 					.contentType(MediaType.TEXT_EVENT_STREAM)
 					.body(timer.greet(), String.class));

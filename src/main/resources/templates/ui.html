@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <head>
-    <title>UI  Client
+    <title>
+        Welcome ${user.name}!
     </title>
 
 </head>
 <body>
+
 <h1> Thymeleaf Model Customers </h1>
 <div th:each = "customer : ${customers}">
     <span th:text="${customer.id}">ID</span>
