@@ -32,6 +32,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 public class BootifulApplication {
 
 	public static void main(String[] args) {
+		System.setProperty("spring.main.lazy-initialization", "true");
 		SpringApplication.run(BootifulApplication.class, args);
 	}
 

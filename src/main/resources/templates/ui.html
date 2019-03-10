@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <head>
-    <title>Websockets Client
+    <title>UI  Client
     </title>
 
 </head>
 <body>
+<h1> Customers </h1>
+<div th:each = "customer : ${customers}">
+    <span th:text="${customer.id}">ID</span>
+    <span th:text="${customer.name}">Name</span>
+</div>
 
+<h1> Websocket Clients
+</h1>
 <div id="messages"></div>
 <script>
     window.addEventListener('load', function (e) {
