@@ -80,7 +80,6 @@ class WebsocketConfig {
 		return new WebSocketHandlerAdapter();
 	}
 
-
 	@Bean
 	WebSocketHandler wsh(Timer timer) {
 		return session -> session.send(timer.greet().share().map(session::textMessage));
