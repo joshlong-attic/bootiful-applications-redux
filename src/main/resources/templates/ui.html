@@ -5,13 +5,13 @@
 
 </head>
 <body>
-<h1> Customers </h1>
+<h1> Thymeleaf Model Customers </h1>
 <div th:each = "customer : ${customers}">
     <span th:text="${customer.id}">ID</span>
     <span th:text="${customer.name}">Name</span>
 </div>
 
-<h1> Websocket Clients
+<h1> Websocket Messages
 </h1>
 <div id="messages"></div>
 <script>
